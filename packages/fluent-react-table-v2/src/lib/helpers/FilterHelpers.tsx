@@ -24,16 +24,16 @@ export const dateRange: FilterFn<unknown> = (row, columnId, value) => {
     return true;
   }
   else if (value.length === 2 && value[0] && !value[1]) {
-    return typeof rowValue.getMonth === 'function' && rowValue >= value[0];
+    return typeof rowValue?.getMonth === 'function' && rowValue >= value[0];
   }
   else if (value.length === 2 && !value[0] && value[1]) {
-    return typeof rowValue.getMonth === 'function' && rowValue <= value[1];
+    return typeof rowValue?.getMonth === 'function' && rowValue <= value[1];
   }
   else if (value.length === 2 && !value[0] && !value[1]) {
     return true;
   }
 
-  const passed = typeof rowValue.getMonth === 'function' && value[0] <= rowValue && rowValue <= value[1];
+  const passed = typeof rowValue?.getMonth === 'function' && value[0] <= rowValue && rowValue <= value[1];
   return passed;
 };
 
@@ -51,7 +51,7 @@ export const date: FilterFn<unknown> = (row, columnId, value : Date) => {
     return true;
   }
 
-  const passed = typeof rowValue.getMonth === 'function' && new Date(value)?.toDateString() === rowValue?.toDateString();
+  const passed = typeof rowValue?.getMonth === 'function' && new Date(value)?.toDateString() === rowValue?.toDateString();
 
   return passed;
 };

@@ -11,6 +11,8 @@ export type Person = {
   createdAt: Date,
   description?: string,
 
+  dob?: Date | null,
+  
   address: {
     street: string,
     city: string,
@@ -42,6 +44,13 @@ const newPerson = (index: number): Person => {
       'complicated',
       'single',
     ])[0],
+
+    // get date with some empty values
+    dob: faker.helpers.arrayElement([
+      faker.date.birthdate({ min: 18, max: 80, mode: 'age' }),
+      undefined,
+      null,
+    ]),
 
     address : { 
       street: faker.location.streetAddress(),

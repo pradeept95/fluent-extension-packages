@@ -44,9 +44,9 @@ export const Filter = <TItem extends RowData>({
     case 'inDateRange': {
       const firstValue = table
         .getPreFilteredRowModel()
-        .flatRows[0]?.getValue(column.id) as Date;
+        .flatRows?.find(x => Boolean(x.getValue(column.id)))?.getValue(column.id) as Date;
 
-      if (typeof firstValue.getMonth === 'function') {
+      if (typeof firstValue?.getMonth === 'function') {
         return <FilterDateRange column={column} table={table} />;
       }
       break;

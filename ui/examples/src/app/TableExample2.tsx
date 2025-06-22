@@ -208,6 +208,16 @@ export function TableExample2() {
           aggregatedCell: () => null,
           filterFn: 'inDateRange',
         }) as ColumnDef<Person>,
+        columnHelper.accessor(({ dob }) => dob, {
+          id: 'DOB',
+          header: 'DOB',
+          cell: (info) =>
+            info.renderValue()
+              ? new Date(info.renderValue() as Date)?.toLocaleDateString()
+              : '',
+          aggregatedCell: () => null,
+          filterFn: 'inDateRange',
+        }) as ColumnDef<Person>,
       ] as ColumnDef<Person>[],
     []
   );
