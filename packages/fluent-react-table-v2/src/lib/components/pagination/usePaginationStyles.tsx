@@ -32,12 +32,21 @@ export const usePaginationStyle = makeStyles({
   },
   pageSelectionWrapper: {
     minWidth: "1.5rem",
+    display: "flex", 
+    alignItems: "center",
+    gap: "1rem",
   },
   pageSelectionDropdown: {
     minWidth: "100%",
   },
   pageSizeInput: {
     minWidth: "1.5rem",
-    width: "4rem",
+    width: "3rem",
+  },
+
+  pageSizeText: {
+    flex: 1,
+    minWidth: "100%",
+    fontSize: "0.8rem"
   },
 });

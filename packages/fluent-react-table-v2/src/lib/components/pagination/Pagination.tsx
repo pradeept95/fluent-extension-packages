@@ -33,6 +33,10 @@ export const Pagination = <TItem extends RowData>(
   const currentPage = table.getState().pagination.pageIndex;
   const pageSize = table.getState().pagination.pageSize;
 
+  // get total item count and number of item in current page
+  const totalItemCount = table.getFilteredRowModel().rows.length;
+  const numberOfItemsInCurrentPage = table.getRowModel().rows.length;
+
   const pageSelectionOptions: number[] = useMemo(() => {
     let start = currentPage - Math.floor(DEFAULT_NUMBER_OF_PAGE_BTN / 2);
     let end = currentPage + Math.floor(DEFAULT_NUMBER_OF_PAGE_BTN / 2);
@@ -78,6 +82,11 @@ export const Pagination = <TItem extends RowData>(
               </For>
             </Show>
           </Dropdown>
+          <Show when={pageSelectionOptions?.length > 0 && totalItemCount > 0}>
+            <span className={styles.pageSizeText}>
+              Showing {numberOfItemsInCurrentPage} of {totalItemCount} items
+            </span>
+          </Show>
         </div>
         <div className={styles.pageBtnContainer}>
           <div>
