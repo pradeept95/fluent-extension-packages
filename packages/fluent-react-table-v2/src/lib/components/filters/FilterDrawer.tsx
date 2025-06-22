@@ -75,7 +75,7 @@ export const FilterDrawer = <TItem extends RowData>({
    const { dispatchDrawerAction, drawerState } = table.options.meta!;
 
   return (
-    <InlineDrawer position="end" open={drawerState?.isFilterDrawerOpen} separator>
+    <InlineDrawer position="end" open={drawerState?.isFilterDrawerOpen} separator size='medium'>
       <DrawerHeader>
         <DrawerHeaderTitle
           action={
