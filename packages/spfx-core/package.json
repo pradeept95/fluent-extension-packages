@@ -1,19 +1,19 @@
 {
   "name": "@prt-ts/spfx-core",
-  "version": "1.21.1-build-1.0",
+  "version": "1.21.1-build-2.0",
   "dependencies": {
     "@pnp/core": "4.5.0",
     "@pnp/graph": "4.5.0",
     "@pnp/logging": "4.5.0",
     "@pnp/sp": "4.5.0",
-    "@microsoft/sp-list-subscription": "1.20.0",
+    "@microsoft/sp-list-subscription": "1.21.1",
     "@microsoft/applicationinsights-web": "3.2.2",
     "socket.io-client": "4.5.4",
     "@prt-ts/types": "latest"
   },
   "peerDependencies": {
-    "@microsoft/sp-webpart-base": "1.20.0",
-    "@microsoft/sp-core-library": "1.20.0"
+    "@microsoft/sp-webpart-base": "1.21.1",
+    "@microsoft/sp-core-library": "1.21.1"
   },
   "publishConfig": {
     "access": "public"

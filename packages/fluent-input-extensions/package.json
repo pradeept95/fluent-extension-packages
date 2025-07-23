@@ -1,6 +1,6 @@
 {
   "name": "@prt-ts/fluent-input-extensions",
-  "version": "9.55.0-build.1.1",
+  "version": "9.66.2-build.1.0",
   "description": "Fluent UI Input Extensions",
   "dependencies": {
     "@prt-ts/react-control-flow": "latest",
@@ -12,7 +12,7 @@
     "react-dropzone": ">=14.0.0"
   },
   "peerDependencies": {
-    "@fluentui/react-components": ">=9.55.0",
+    "@fluentui/react-components": ">=9.66.2",
     "@fluentui/react-icons": ">=2.0.260",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"

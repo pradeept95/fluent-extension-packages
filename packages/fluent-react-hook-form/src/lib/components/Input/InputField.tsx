@@ -103,7 +103,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         control={control}
         rules={rules}
         render={({ field, fieldState }) => {
-          const { onChange, onBlur, value, ref } = field;
+          const { onChange, onBlur, value = "", ref } = field;
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -160,7 +160,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 name={name}
                 onChange={handleOnChange}
                 onBlur={handleOnBlur}
-                value={value || ''}
+                value={value}
                 required={false}
                 list={
                   autoCompleteOptions.length > 0

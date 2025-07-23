@@ -17,5 +17,6 @@
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "appService.defaultWebAppToDeploy": "/subscriptions/2eb2e550-03f9-4ea7-95a1-fbc0ff917d36/resourceGroups/spfx-workspace/providers/Microsoft.Web/sites/fluent-extension-packages",
-    "appService.deploySubpath": "dist\\ui\\examples"
+    "appService.deploySubpath": "dist\\ui\\examples",
+    "nxConsole.generateAiAgentRules": true
 }

@@ -34,6 +34,8 @@ const InputSchema = Yup.object().shape({
     .max(15, 'Phone number must be at most 15 characters'),
 
   tagPicker: Yup.array().min(1, 'Tag Picker is required'),
+  numberValue0: Yup.number(),
+  numberValueNull: Yup.number().nullable(),
 });
 
 type InputFormValues = Yup.InferType<typeof InputSchema>;
@@ -44,7 +46,10 @@ export const InputExample: React.FC = () => {
       field1: '',
       field2: 'with initial value',
       field3: '',
-      tagPicker: ["One"],
+      tagPicker: ['One'],
+
+      numberValue0: 0,
+      numberValueNull: null,
     },
     resolver: yupResolver(InputSchema),
   });
@@ -100,6 +105,18 @@ export const InputExample: React.FC = () => {
             placeholder={'Currency Input'}
             hint={<>Enter number, it will automatically format</>}
             info={<>some phone number info</>}
+          />
+
+          <Input
+            name="numberValue0"
+            label="Number input with 0 default value"
+            placeholder={'Number Input'}
+          />
+
+          <Input
+            name="numberValueNull"
+            label="Number input with null default value"
+            placeholder={'Number Input'}
           />
 
           <TagPicker
