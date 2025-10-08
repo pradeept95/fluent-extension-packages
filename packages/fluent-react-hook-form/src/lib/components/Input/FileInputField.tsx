@@ -127,6 +127,7 @@ export const FileInputField = forwardRef<HTMLInputElement, FileInputFieldProps>(
                                   appearance="subtle"
                                   href={file.path}
                                   target="_blank"
+                                  data-interception="off"
                                 >
                                   <i>{file.name}</i>
                                 </Link>
