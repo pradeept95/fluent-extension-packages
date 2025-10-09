@@ -1,10 +1,10 @@
 {
   "name": "@prt-ts/fluent-react-hook-form",
-  "version": "9.66.2-build-2.0",
+  "version": "9.66.2-build-3.1",
   "description": "Fluent React Hook Form is a component library for React that provides a set of components to build forms using react-hook-form and Fluent UI",
   "dependencies": {
-    "react-hook-form": ">=7.0.0",
-    "@hookform/resolvers": ">=3.0.0",
+    "react-hook-form": "7.54.1",
+    "@hookform/resolvers": "3.9.1",
     "@fluentui/react-datepicker-compat": ">=0.4.32",
     "@fluentui/react-timepicker-compat": ">=0.2.8",
     "@fluentui/react-calendar-compat": ">=0.1.19",
