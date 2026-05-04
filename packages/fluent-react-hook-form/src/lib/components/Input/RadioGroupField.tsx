@@ -54,6 +54,18 @@ const useRadioStyles = makeStyles({
   root: {
     flexWrap: 'wrap',
   },
+  disabledOptionCursor: {
+    cursor: 'not-allowed',
+    '& .fui-Radio__input': {
+      cursor: 'not-allowed',
+    },
+    '& .fui-Radio__label': {
+      cursor: 'not-allowed',
+    },
+    '& .fui-Radio__indicator': {
+      cursor: 'not-allowed',
+    },
+  },
   disabledOptionContrast: {
     '--colorNeutralForegroundDisabled': tokens.colorNeutralForeground4,
     '--colorNeutralStrokeDisabled': tokens.colorNeutralStrokeAccessible,
@@ -180,6 +192,7 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
                         aria-label={optionAriaLabel}
                         className={mergeClasses(
                           radioProps.className,
+                          isDisabled && styles.disabledOptionCursor,
                           isDisabled && styles.disabledOptionContrast
                         )}
                         {...radioProps}
@@ -207,6 +220,7 @@ export type RadioFieldProps = FieldProps &
 
 export const RadioField = forwardRef<HTMLInputElement, RadioFieldProps>(
   ({ name, value, radioLabel, rules, required, ...rest }, radioRef) => {
+    const styles = useRadioStyles();
     const {
       form: { control },
     } = useFormContext();
@@ -263,6 +277,10 @@ export const RadioField = forwardRef<HTMLInputElement, RadioFieldProps>(
                 onBlur={handleOnBlur}
                 /* eslint-disable-next-line */
                 label={<>{radioLabel || `${value}`}</>}
+                className={mergeClasses(
+                  radioProps.className,
+                  radioProps.disabled && styles.disabledOptionCursor
+                )}
                 required={false}
               />
             </Field>
