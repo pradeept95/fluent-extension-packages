@@ -84,9 +84,9 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
             fieldProps.label
           );
           const groupLabelText = visibleGroupLabelText ?? name;
-          const ariaLabelledBy =
-            radioGroupProps['aria-labelledby'] ||
-            (visibleGroupLabelText ? labelId : undefined);
+          const ariaLabelledBy = visibleGroupLabelText
+            ? labelId
+            : radioGroupProps['aria-labelledby'];
           const ariaLabel =
             radioGroupProps['aria-label'] ||
             (ariaLabelledBy ? undefined : groupLabelText);
@@ -121,10 +121,10 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
                   ? ({
                       children: (_: unknown, props: LabelProps) => (
                         <InfoLabel
-                          id={labelId}
                           weight="semibold"
                           {...props}
                           {...infoLabelProps}
+                          id={labelId}
                         />
                       ),
                     } as unknown as InfoLabelProps)
