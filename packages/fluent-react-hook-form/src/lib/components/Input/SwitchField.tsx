@@ -106,6 +106,9 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}
               required={required}
+              orientation={
+                shouldRenderFieldLabel ? fieldProps.orientation : 'vertical'
+              }
             >
               <Switch
                 {...switchProps}
