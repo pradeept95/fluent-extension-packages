@@ -1,6 +1,6 @@
 {
   "name": "@prt-ts/fluent-input-extensions",
-  "version": "9.66.2-build.1.0",
+  "version": "9.66.2-build.2.0",
   "description": "Fluent UI Input Extensions",
   "dependencies": {
     "@prt-ts/react-control-flow": "latest",
