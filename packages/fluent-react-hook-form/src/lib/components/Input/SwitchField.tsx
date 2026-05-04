@@ -13,6 +13,7 @@ import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import {
   getAccessibleLabelText,
+  getControlAriaLabel,
   getVisibleFieldLabelText,
 } from './accessibility';
 
@@ -48,6 +49,18 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
           );
           const switchLabel =
             switchProps.label ?? (value ? rest.checkedLabel : rest.uncheckedLabel);
+          const hasVisibleSwitchLabel = !!getAccessibleLabelText(switchLabel);
+          const shouldRenderFieldLabel =
+            !!fieldLabelText && !hasVisibleSwitchLabel;
+          const switchAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: switchProps['aria-label'],
+            visibleFieldLabel: hasVisibleSwitchLabel
+              ? switchLabel
+              : shouldRenderFieldLabel
+              ? fieldLabelText
+              : undefined,
+            name,
+          });
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -66,7 +79,7 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
             <Field
               {...fieldProps}
               label={
-                fieldLabelText
+                shouldRenderFieldLabel
                   ? ({
                       children: (_: unknown, props: LabelProps) => (
                         <InfoLabel
@@ -90,12 +103,7 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
                 onBlur={handleOnBlur}
                 checked={!!value}
                 label={switchLabel}
-                aria-label={
-                  switchProps['aria-label'] ||
-                  getAccessibleLabelText(switchLabel) ||
-                  fieldLabelText ||
-                  name
-                }
+                aria-label={switchAriaLabel}
                 required={false}
               />
             </Field>
