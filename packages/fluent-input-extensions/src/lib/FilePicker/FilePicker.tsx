@@ -28,6 +28,22 @@ export const FilePicker = React.forwardRef<FilePickerRef, FilePickerProps>(
       ...rest
     } = props;
     const { ...dropzoneProps }: DropzoneProps = rest;
+    const pickerAriaProps = rest as Record<string, unknown>;
+    const explicitAriaLabel =
+      typeof pickerAriaProps['aria-label'] === 'string'
+        ? pickerAriaProps['aria-label'].trim()
+        : undefined;
+    const explicitAriaLabelledBy =
+      typeof pickerAriaProps['aria-labelledby'] === 'string'
+        ? pickerAriaProps['aria-labelledby'].trim()
+        : undefined;
+    const explicitAriaDescribedBy =
+      typeof pickerAriaProps['aria-describedby'] === 'string'
+        ? pickerAriaProps['aria-describedby'].trim()
+        : undefined;
+    const fallbackAriaLabel =
+      placeholder?.trim() || name?.trim() || 'Attachments';
+    const filePickerAriaLabel = explicitAriaLabel || fallbackAriaLabel;
 
     const {
       acceptedFiles,
@@ -85,8 +101,29 @@ export const FilePicker = React.forwardRef<FilePickerRef, FilePickerProps>(
 
     return (
       <div className={styles.root}>
-        <div {...getRootProps({ filepickerstyle })} ref={inputRef}>
-          <input {...getInputProps()} aria-invalid={invalid} />
+        <div
+          {...getRootProps({
+            filepickerstyle,
+            role: 'button',
+            'aria-label': explicitAriaLabelledBy
+              ? undefined
+              : filePickerAriaLabel,
+            'aria-labelledby': explicitAriaLabelledBy,
+            'aria-describedby': explicitAriaDescribedBy,
+          })}
+          ref={inputRef}
+        >
+          <input
+            {...getInputProps({
+              name,
+              'aria-label': explicitAriaLabelledBy
+                ? undefined
+                : filePickerAriaLabel,
+              'aria-labelledby': explicitAriaLabelledBy,
+              'aria-describedby': explicitAriaDescribedBy,
+              'aria-invalid': invalid || undefined,
+            })}
+          />
           <p
             className={filepickerstyle}
             style={{
