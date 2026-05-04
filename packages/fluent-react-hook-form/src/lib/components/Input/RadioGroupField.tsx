@@ -11,11 +11,54 @@ import {
   InfoLabel,
   InfoLabelProps,
   RadioOnChangeData,
+  makeStyles,
+  mergeClasses,
+  tokens,
 } from '@fluentui/react-components';
-import { ReactNode, forwardRef } from 'react';
+import { ReactNode, forwardRef, isValidElement } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { ChoiceOption } from '@prt-ts/types';
+
+const getAccessibleLabelText = (label: unknown): string | undefined => {
+  if (typeof label === 'string') {
+    const trimmedLabel = label.trim();
+    return trimmedLabel.length > 0 ? trimmedLabel : undefined;
+  }
+
+  if (typeof label === 'number') {
+    return `${label}`;
+  }
+
+  if (Array.isArray(label)) {
+    const mergedLabel = label
+      .map((item) => getAccessibleLabelText(item))
+      .filter((item): item is string => !!item)
+      .join(' ')
+      .trim();
+    return mergedLabel.length > 0 ? mergedLabel : undefined;
+  }
+
+  if (isValidElement<{ children?: unknown }>(label)) {
+    return getAccessibleLabelText(label.props.children);
+  }
+
+  if (label && typeof label === 'object' && 'children' in label) {
+    return getAccessibleLabelText((label as { children?: unknown }).children);
+  }
+
+  return undefined;
+};
+
+const useRadioStyles = makeStyles({
+  root: {
+    flexWrap: 'wrap',
+  },
+  disabledOptionContrast: {
+    '--colorNeutralForegroundDisabled': tokens.colorNeutralForeground4,
+    '--colorNeutralStrokeDisabled': tokens.colorNeutralStrokeAccessible,
+  },
+});
 
 export type RadioChoiceOption = {
   radioProps?: Partial<RadioProps> | undefined;
@@ -32,6 +75,7 @@ export type RadioGroupFieldProps = FieldProps &
 export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
   ({ name, options, rules, required, ...rest }, radioGroupRef) => {
     const labelId = useId('radio-input');
+    const styles = useRadioStyles();
     const {
       form: { control },
     } = useFormContext();
@@ -49,6 +93,16 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const visibleGroupLabelText =
+            getAccessibleLabelText(infoLabelProps.label) ??
+            getAccessibleLabelText(fieldProps.label);
+          const groupLabelText = visibleGroupLabelText ?? name;
+          const ariaLabelledBy =
+            radioGroupProps['aria-labelledby'] ||
+            (visibleGroupLabelText ? labelId : undefined);
+          const ariaLabel =
+            radioGroupProps['aria-label'] ||
+            (ariaLabelledBy ? undefined : groupLabelText);
 
           const handleOnChange: RadioGroupProps['onChange'] = (
             ev: React.FormEvent<HTMLDivElement>,
@@ -79,6 +133,7 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
                 {
                   children: (_: unknown, props: LabelProps) => (
                     <InfoLabel
+                      id={labelId}
                       weight="semibold"
                       {...props}
                       {...infoLabelProps}
@@ -96,27 +151,41 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
                 onBlur={handleOnBlur}
                 value={`${value?.value}` || ''}
                 onChange={handleOnChange}
-                aria-labelledby={labelId}
+                aria-labelledby={ariaLabelledBy}
+                aria-label={ariaLabel}
                 required={false}
-                style={{
-                  flexWrap: 'wrap',
-                }}
+                className={mergeClasses(styles.root, radioGroupProps.className)}
               >
                 {(options || []).map(
                   (
                     { radioProps = {}, ...option }: RadioChoiceOption,
                     index: number
-                  ) => (
-                    <Radio
-                      key={`${option.value}-${index}`}
-                      value={`${option.value}`}
-                      /*eslint-disable-next-line*/
-                      label={{
-                        children: option.label,
-                      }}
-                      {...radioProps}
-                    />
-                  )
+                  ) => {
+                    const isDisabled =
+                      !!radioGroupProps.disabled || !!radioProps.disabled;
+                    const optionAriaLabel =
+                      radioProps['aria-label'] ||
+                      getAccessibleLabelText(radioProps.label) ||
+                      getAccessibleLabelText(option.label) ||
+                      groupLabelText;
+
+                    return (
+                      <Radio
+                        key={`${option.value}-${index}`}
+                        value={`${option.value}`}
+                        /*eslint-disable-next-line*/
+                        label={{
+                          children: option.label,
+                        }}
+                        aria-label={optionAriaLabel}
+                        className={mergeClasses(
+                          radioProps.className,
+                          isDisabled && styles.disabledOptionContrast
+                        )}
+                        {...radioProps}
+                      />
+                    );
+                  }
                 )}
               </RadioGroup>
             </Field>
