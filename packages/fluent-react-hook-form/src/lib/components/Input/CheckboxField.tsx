@@ -9,13 +9,42 @@ import {
   InfoLabelProps,
   makeStyles,
   mergeClasses,
-  shorthands,
   tokens,
   useArrowNavigationGroup,
 } from '@fluentui/react-components';
-import { ReactNode, forwardRef } from 'react';
+import { ReactNode, forwardRef, isValidElement } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
+
+const getAccessibleLabelText = (label: unknown): string | undefined => {
+  if (typeof label === 'string') {
+    const trimmedLabel = label.trim();
+    return trimmedLabel.length > 0 ? trimmedLabel : undefined;
+  }
+
+  if (typeof label === 'number') {
+    return `${label}`;
+  }
+
+  if (Array.isArray(label)) {
+    const mergedLabel = label
+      .map((item) => getAccessibleLabelText(item))
+      .filter((item): item is string => !!item)
+      .join(' ')
+      .trim();
+    return mergedLabel.length > 0 ? mergedLabel : undefined;
+  }
+
+  if (isValidElement<{ children?: unknown }>(label)) {
+    return getAccessibleLabelText(label.props.children);
+  }
+
+  if (label && typeof label === 'object' && 'children' in label) {
+    return getAccessibleLabelText((label as { children?: unknown }).children);
+  }
+
+  return undefined;
+};
 
 export type CheckboxFieldProps = FieldProps &
   CheckboxProps &
@@ -43,6 +72,13 @@ export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText =
+            getAccessibleLabelText(infoLabelProps.label) ??
+            getAccessibleLabelText(fieldProps.label);
+          const checkboxLabel =
+            checkboxProps.label ??
+            (value ? rest.checkedLabel : rest.uncheckedLabel) ??
+            fieldLabelText;
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -82,7 +118,13 @@ export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
                 onChange={handleOnChange}
                 onBlur={handleOnBlur}
                 checked={value || false}
-                label={value ? rest.checkedLabel : rest.uncheckedLabel}
+                label={checkboxLabel}
+                aria-label={
+                  checkboxProps['aria-label'] ||
+                  getAccessibleLabelText(checkboxLabel) ||
+                  fieldLabelText ||
+                  name
+                }
                 required={false}
               />
             </Field>
@@ -190,6 +232,10 @@ export const CheckboxGroupField = forwardRef<
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const groupLabelText =
+            getAccessibleLabelText(infoLabelProps.label) ??
+            getAccessibleLabelText(fieldProps.label) ??
+            name;
           const selectedValues = (value || [])?.map(
             (v: CheckboxChoiceOption) => v.value
           );
@@ -239,6 +285,11 @@ export const CheckboxGroupField = forwardRef<
               >
                 {(options || []).map((option) => {
                   const { checkboxProps, ...optionRest } = option;
+                  const optionAriaLabel =
+                    checkboxProps?.['aria-label'] ||
+                    getAccessibleLabelText(checkboxProps?.label) ||
+                    getAccessibleLabelText(option.label) ||
+                    groupLabelText;
                   return (
                     <Checkbox
                       {...checkboxProps}
@@ -249,6 +300,7 @@ export const CheckboxGroupField = forwardRef<
                       }
                       onBlur={handleOnBlur}
                       checked={(selectedValues || []).includes(option.value)}
+                      aria-label={optionAriaLabel}
                       /* eslint-disable-next-line*/
                       label={{
                         className: styles.checkboxLabel,

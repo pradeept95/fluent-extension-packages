@@ -111,7 +111,9 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
                       key={`${option.value}-${index}`}
                       value={`${option.value}`}
                       /*eslint-disable-next-line*/
-                      label={<>{option.label}</>}
+                      label={{
+                        children: option.label,
+                      }}
                       {...radioProps}
                     />
                   )
