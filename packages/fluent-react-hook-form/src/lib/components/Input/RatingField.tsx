@@ -13,7 +13,7 @@ import {
 import { SyntheticEvent, forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type RatingFieldProps = FieldProps &
   InfoLabelProps &
@@ -44,6 +44,11 @@ export const RatingField = forwardRef<HTMLInputElement, RatingFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const ratingAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: ratingProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            name,
+          });
 
           const handleOnChange: RatingProps['onChange'] = (
             ev: Event | SyntheticEvent<Element, Event>,
@@ -85,6 +90,7 @@ export const RatingField = forwardRef<HTMLInputElement, RatingFieldProps>(
                 onChange={handleOnChange}
                 onBlur={handleOnBlur}
                 value={value || ''}
+                aria-label={ratingAriaLabel}
               />
             </Field>
           );
@@ -126,6 +132,11 @@ export const RatingDisplayField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const ratingDisplayAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: ratingProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          name,
+        });
 
         return (
           <Field
@@ -151,6 +162,7 @@ export const RatingDisplayField = forwardRef<
               {...ratingProps}
               ref={ratingRef || ref}
               value={value || 0}
+              aria-label={ratingDisplayAriaLabel}
             />
           </Field>
         );

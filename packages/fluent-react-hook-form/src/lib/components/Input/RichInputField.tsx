@@ -12,7 +12,7 @@ import {
   FluentEditor,
   FluentEditorProps,
 } from '@prt-ts/fluent-input-extensions';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type RichInputFieldProps = FieldProps &
   FluentEditorProps &
@@ -41,6 +41,12 @@ export const RichInputField = forwardRef<HTMLDivElement, RichInputFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const editorAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: fluentEditorProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: fluentEditorProps.placeholder,
+            name,
+          });
 
           return (
             <Field
@@ -75,6 +81,7 @@ export const RichInputField = forwardRef<HTMLDivElement, RichInputFieldProps>(
                   {...fieldProps}
                   style={style}
                   className={className}
+                  aria-label={editorAriaLabel}
                 />
               )}
             </Field>
@@ -109,6 +116,12 @@ export const RichViewerField = forwardRef<HTMLDivElement, RichInputFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const editorAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: fluentEditorProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: fluentEditorProps.placeholder,
+            name,
+          });
 
           return (
             <Field
@@ -140,6 +153,7 @@ export const RichViewerField = forwardRef<HTMLDivElement, RichInputFieldProps>(
                   // make it readonly
                   readOnly={true}
                   showRibbon={false}
+                  aria-label={editorAriaLabel}
                 />
               )}
             </Field>

@@ -11,7 +11,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type SliderFieldProps = FieldProps &
   SliderProps &
@@ -41,6 +41,11 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const sliderAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: sliderProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            name,
+          });
 
           const handleOnChange: SliderProps['onChange'] = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -84,6 +89,7 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
                 onChange={handleOnChange}
                 onBlur={handleOnBlur}
                 value={+(value || 0)}
+                aria-label={sliderAriaLabel}
                 required={false}
               />
             </Field>

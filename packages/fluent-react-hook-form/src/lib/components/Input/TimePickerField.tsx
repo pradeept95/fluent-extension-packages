@@ -18,7 +18,7 @@ import {
   TimePickerProps,
   formatDateToTimeString,
 } from '@fluentui/react-timepicker-compat';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type TimePickerFieldProps = FieldProps &
   InfoLabelProps & {
@@ -83,6 +83,12 @@ export const TimePickerField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const timePickerAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: timePickerProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: timePickerProps.placeholder,
+          name,
+        });
 
         return (
           <Field
@@ -123,6 +129,7 @@ export const TimePickerField = forwardRef<
                   }}
                   {...fieldProps}
                   ref={inputRef || ref}
+                  aria-label={timePickerAriaLabel}
                 />
               </div>
             )}
@@ -206,6 +213,18 @@ export const DateTimePickerField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const datePickerAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: datePickerProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: datePickerProps.placeholder,
+          name: `${name}-date`,
+        });
+        const timePickerAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: timePickerProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: timePickerProps.placeholder,
+          name: `${name}-time`,
+        });
         return (
           <Field
             {...fieldProps}
@@ -239,6 +258,7 @@ export const DateTimePickerField = forwardRef<
                   )}
                   {...fieldProps}
                   ref={inputRef || ref}
+                  aria-label={datePickerAriaLabel}
                 />
                 <TimePicker
                   placeholder="Select a time..."
@@ -255,6 +275,7 @@ export const DateTimePickerField = forwardRef<
                     className: styles.timePickerInputClass,
                   }}
                   {...fieldProps}
+                  aria-label={timePickerAriaLabel}
                 />
               </div>
             )}

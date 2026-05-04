@@ -15,7 +15,7 @@ import { Controller, ControllerProps } from 'react-hook-form';
 import { mask } from '../../utils/InputFormatter';
 import { CommonFieldInfoLabelProps } from '../types/CommonFieldProps';
 import { Show } from '@prt-ts/react-control-flow';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 type AdditionalInputProps = {
   name: string;
@@ -109,6 +109,12 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const inputAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: inputProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: inputProps.placeholder,
+            name,
+          });
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -168,6 +174,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 onChange={handleOnChange}
                 onBlur={handleOnBlur}
                 value={value}
+                aria-label={inputAriaLabel}
                 required={false}
                 list={
                   autoCompleteOptions.length > 0

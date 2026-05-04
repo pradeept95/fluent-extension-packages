@@ -15,7 +15,7 @@ import {
   PeopleInputRef,
 } from '@prt-ts/fluent-input-extensions';
 import { useFormContext } from '../Form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type PeoplePickerProps = Omit<PeopleInputProps, 'value'> &
   InfoLabelProps &
@@ -60,6 +60,12 @@ export const PeoplePickerField = React.forwardRef<
           label,
           fieldsProps.label
         );
+        const peoplePickerAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: peoplePickerProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: peoplePickerProps.placeholder,
+          name,
+        });
         return (
           <Field
             {...fieldsProps}
@@ -104,6 +110,7 @@ export const PeoplePickerField = React.forwardRef<
               ref={ref || fieldRef}
               style={style}
               className={className}
+              aria-label={peoplePickerAriaLabel}
             />
           </Field>
         );

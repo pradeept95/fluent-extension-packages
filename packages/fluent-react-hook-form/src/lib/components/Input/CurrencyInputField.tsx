@@ -11,7 +11,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type InputFieldProps = FieldProps &
   InputProps &
@@ -71,6 +71,12 @@ export const CurrencyInputField = forwardRef<HTMLInputElement, InputFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const inputAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: inputProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: inputProps.placeholder,
+            name,
+          });
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -115,6 +121,7 @@ export const CurrencyInputField = forwardRef<HTMLInputElement, InputFieldProps>(
                 onBlur={handleOnBlur}
                 onFocus={(event) => event.target.select()}
                 value={value || ''}
+                aria-label={inputAriaLabel}
                 required={false}
               />
             </Field>

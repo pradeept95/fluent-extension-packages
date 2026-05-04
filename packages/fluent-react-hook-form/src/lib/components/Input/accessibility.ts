@@ -36,3 +36,34 @@ export const getVisibleFieldLabelText = (
 ): string | undefined => {
   return getAccessibleLabelText(infoLabel) ?? getAccessibleLabelText(fieldLabel);
 };
+
+type ControlAriaLabelOptions = {
+  explicitAriaLabel?: unknown;
+  visibleFieldLabel?: unknown;
+  placeholder?: unknown;
+  name: string;
+};
+
+export const getControlAriaLabel = ({
+  explicitAriaLabel,
+  visibleFieldLabel,
+  placeholder,
+  name,
+}: ControlAriaLabelOptions): string | undefined => {
+  const ariaLabel = getAccessibleLabelText(explicitAriaLabel);
+  if (ariaLabel) {
+    return ariaLabel;
+  }
+
+  const visibleLabel = getAccessibleLabelText(visibleFieldLabel);
+  if (visibleLabel) {
+    return undefined;
+  }
+
+  const placeholderText = getAccessibleLabelText(placeholder);
+  if (placeholderText) {
+    return placeholderText;
+  }
+
+  return name;
+};

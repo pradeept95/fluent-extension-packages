@@ -13,7 +13,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type ComboboxChoiceOption = {
   label: string;
@@ -56,6 +56,12 @@ export const ComboboxField = forwardRef<HTMLInputElement, ComboboxFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const comboboxAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: comboboxProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: comboboxProps.placeholder,
+            name,
+          });
 
           const displayValue =
             (value as OptionOnly[])?.map((v) => v.label)?.join(', ') || '';
@@ -112,6 +118,7 @@ export const ComboboxField = forwardRef<HTMLInputElement, ComboboxFieldProps>(
                 selectedOptions={selectedOptions}
                 onOptionSelect={handleOnChange}
                 onBlur={handleOnBlur}
+                aria-label={comboboxAriaLabel}
               >
                 {(options || []).map(
                   (option: ComboboxChoiceOption, index: number) => (

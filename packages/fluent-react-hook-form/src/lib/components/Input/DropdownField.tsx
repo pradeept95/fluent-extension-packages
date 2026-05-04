@@ -18,7 +18,7 @@ import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { Show } from '@prt-ts/react-control-flow';
 import { ChoiceOption } from '@prt-ts/types';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type DropdownChoiceOption = {
   optionProps?: Partial<OptionProps> | undefined;
@@ -115,6 +115,12 @@ export const DropdownField = forwardRef<HTMLButtonElement, DropdownFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const dropdownAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: dropdownProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: dropdownProps.placeholder,
+            name,
+          });
 
           const displayValue =
             (value as OptionOnly[])?.map((v) => v.label)?.join(', ') || '';
@@ -179,6 +185,7 @@ export const DropdownField = forwardRef<HTMLButtonElement, DropdownFieldProps>(
                 selectedOptions={selectedOptions}
                 onOptionSelect={handleOnChange}
                 onBlur={handleOnBlur}
+                aria-label={dropdownAriaLabel}
               >
                 <Show when={!readOnly}>{dropdownOptions}</Show>
               </Dropdown>

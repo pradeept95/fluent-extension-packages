@@ -31,7 +31,7 @@ import {
 import { FileInfo } from '@prt-ts/types';
 import { FilePicker, FilePickerProps } from '@prt-ts/fluent-input-extensions';
 import { For, Show } from '@prt-ts/react-control-flow';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type FileInputFieldProps = FieldProps &
   InfoLabelProps &
@@ -79,6 +79,14 @@ export const FileInputField = forwardRef<HTMLInputElement, FileInputFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const filePickerAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: (filePickerProps as Record<string, unknown>)[
+              'aria-label'
+            ],
+            visibleFieldLabel: fieldLabelText,
+            placeholder,
+            name,
+          });
 
           const validationMessage = fieldState.error?.message;
           const validationState =
@@ -116,6 +124,7 @@ export const FileInputField = forwardRef<HTMLInputElement, FileInputFieldProps>(
                   }}
                   invalid={validationState === 'error'}
                   placeholder={placeholder}
+                  aria-label={filePickerAriaLabel}
                 />
               </Field>
               <Show when={savedFiles?.length > 0}>

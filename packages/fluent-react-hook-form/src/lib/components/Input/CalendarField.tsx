@@ -10,7 +10,7 @@ import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { Calendar } from '@fluentui/react-calendar-compat';
 import type { CalendarProps } from '@fluentui/react-calendar-compat';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export {
   DateRangeType,
@@ -48,6 +48,13 @@ export const CalendarField = forwardRef<HTMLInputElement, CalendarFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const calendarAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: (calendarProps as Record<string, unknown>)[
+              'aria-label'
+            ],
+            visibleFieldLabel: fieldLabelText,
+            name,
+          });
 
           const handleOnChange: CalendarProps['onSelectDate'] = (
             date: Date | null,
@@ -95,6 +102,7 @@ export const CalendarField = forwardRef<HTMLInputElement, CalendarFieldProps>(
                 ref={inputRef || ref}
                 onSelectDate={handleOnChange}
                 value={value || new Date()}
+                aria-label={calendarAriaLabel}
               />
             </Field>
           );

@@ -17,7 +17,7 @@ import {
   TagInputProps,
   TagInputRef,
 } from '@prt-ts/fluent-input-extensions';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type TagPickerFieldProps = CommonFieldInfoLabelProps &
   TagPickerInputProps & {
@@ -97,6 +97,12 @@ export const TagPickerField = forwardRef<TagInputRef, TagPickerFieldProps>(
             infoLabelProps.label,
             fieldProps.label
           );
+          const tagInputAriaLabel = getControlAriaLabel({
+            explicitAriaLabel: inputProps['aria-label'],
+            visibleFieldLabel: fieldLabelText,
+            placeholder: inputProps.placeholder,
+            name,
+          });
 
           return (
             <Field
@@ -132,6 +138,7 @@ export const TagPickerField = forwardRef<TagInputRef, TagPickerFieldProps>(
                 freeform={props.freeform}
                 multiselect={props.multiselect}
                 ref={inputRef || ref}
+                aria-label={tagInputAriaLabel}
               />
             </Field>
           );

@@ -9,7 +9,7 @@ import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { DatePicker, DatePickerProps } from '@fluentui/react-datepicker-compat';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type DatePickerFieldProps = FieldProps &
   InfoLabelProps &
@@ -38,6 +38,12 @@ export const DatePickerField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const datePickerAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: datePickerProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: datePickerProps.placeholder,
+          name,
+        });
 
         const handleOnChange: DatePickerProps['onSelectDate'] = (
           date: Date | null | undefined
@@ -79,6 +85,7 @@ export const DatePickerField = forwardRef<
               onSelectDate={handleOnChange}
               onBlur={handleOnBlur}
               value={value || ''}
+              aria-label={datePickerAriaLabel}
               required={false}
             />
           </Field>

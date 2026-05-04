@@ -12,7 +12,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type TextareaFieldProps = FieldProps &
   TextareaProps &
@@ -51,6 +51,12 @@ export const TextareaField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const textareaAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: textareaProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          placeholder: textareaProps.placeholder,
+          name,
+        });
 
         const handleOnChange = (
           ev: React.ChangeEvent<HTMLTextAreaElement>,
@@ -92,6 +98,7 @@ export const TextareaField = forwardRef<
               onChange={handleOnChange}
               onBlur={handleOnBlur}
               value={value || ''}
+              aria-label={textareaAriaLabel}
               required={false}
               textarea={{
                 className: styles.textarea,

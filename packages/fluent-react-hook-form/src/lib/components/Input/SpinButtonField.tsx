@@ -12,7 +12,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-import { getVisibleFieldLabelText } from './accessibility';
+import { getControlAriaLabel, getVisibleFieldLabelText } from './accessibility';
 
 export type SpinButtonFieldProps = FieldProps &
   SpinButtonProps &
@@ -41,6 +41,11 @@ export const SpinButtonField = forwardRef<
           infoLabelProps.label,
           fieldProps.label
         );
+        const spinButtonAriaLabel = getControlAriaLabel({
+          explicitAriaLabel: spinButtonProps['aria-label'],
+          visibleFieldLabel: fieldLabelText,
+          name,
+        });
 
         const handleOnChange: SpinButtonProps['onChange'] = (
           ev: SpinButtonChangeEvent,
@@ -93,6 +98,7 @@ export const SpinButtonField = forwardRef<
               onChange={handleOnChange}
               onBlur={handleOnBlur}
               value={value || 0}
+              aria-label={spinButtonAriaLabel}
               required={false}
             />
           </Field>
