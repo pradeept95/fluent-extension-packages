@@ -17,6 +17,7 @@ import {
   TagInputProps,
   TagInputRef,
 } from '@prt-ts/fluent-input-extensions';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type TagPickerFieldProps = CommonFieldInfoLabelProps &
   TagPickerInputProps & {
@@ -92,21 +93,27 @@ export const TagPickerField = forwardRef<TagInputRef, TagPickerFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value = [], ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           return (
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      {...props}
-                      {...infoLabelProps}
-                      htmlFor={fieldId}
-                      weight="semibold"
-                    />
-                  ),
-                } as LabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          {...props}
+                          {...infoLabelProps}
+                          htmlFor={fieldId}
+                          weight="semibold"
+                        />
+                      ),
+                    } as LabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

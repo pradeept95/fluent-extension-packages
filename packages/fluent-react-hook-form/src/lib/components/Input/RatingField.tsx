@@ -13,6 +13,7 @@ import {
 import { SyntheticEvent, forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type RatingFieldProps = FieldProps &
   InfoLabelProps &
@@ -39,6 +40,10 @@ export const RatingField = forwardRef<HTMLInputElement, RatingFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const handleOnChange: RatingProps['onChange'] = (
             ev: Event | SyntheticEvent<Element, Event>,
@@ -57,15 +62,17 @@ export const RatingField = forwardRef<HTMLInputElement, RatingFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}
@@ -115,16 +122,26 @@ export const RatingDisplayField = forwardRef<
       rules={rules}
       render={({ field, fieldState }) => {
         const { value, ref } = field;
+        const fieldLabelText = getVisibleFieldLabelText(
+          infoLabelProps.label,
+          fieldProps.label
+        );
 
         return (
           <Field
             {...fieldProps}
             label={
-              {
-                children: (_: unknown, props: LabelProps) => (
-                  <InfoLabel weight="semibold" {...props} {...infoLabelProps} />
-                ),
-              } as unknown as InfoLabelProps
+              fieldLabelText
+                ? ({
+                    children: (_: unknown, props: LabelProps) => (
+                      <InfoLabel
+                        weight="semibold"
+                        {...props}
+                        {...infoLabelProps}
+                      />
+                    ),
+                  } as unknown as InfoLabelProps)
+                : undefined
             }
             validationState={fieldState.invalid ? 'error' : undefined}
             validationMessage={fieldState.error?.message}

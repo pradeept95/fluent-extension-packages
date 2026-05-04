@@ -15,40 +15,14 @@ import {
   mergeClasses,
   tokens,
 } from '@fluentui/react-components';
-import { ReactNode, forwardRef, isValidElement } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { ChoiceOption } from '@prt-ts/types';
-
-const getAccessibleLabelText = (label: unknown): string | undefined => {
-  if (typeof label === 'string') {
-    const trimmedLabel = label.trim();
-    return trimmedLabel.length > 0 ? trimmedLabel : undefined;
-  }
-
-  if (typeof label === 'number') {
-    return `${label}`;
-  }
-
-  if (Array.isArray(label)) {
-    const mergedLabel = label
-      .map((item) => getAccessibleLabelText(item))
-      .filter((item): item is string => !!item)
-      .join(' ')
-      .trim();
-    return mergedLabel.length > 0 ? mergedLabel : undefined;
-  }
-
-  if (isValidElement<{ children?: unknown }>(label)) {
-    return getAccessibleLabelText(label.props.children);
-  }
-
-  if (label && typeof label === 'object' && 'children' in label) {
-    return getAccessibleLabelText((label as { children?: unknown }).children);
-  }
-
-  return undefined;
-};
+import {
+  getAccessibleLabelText,
+  getVisibleFieldLabelText,
+} from './accessibility';
 
 const useRadioStyles = makeStyles({
   root: {
@@ -105,9 +79,10 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
-          const visibleGroupLabelText =
-            getAccessibleLabelText(infoLabelProps.label) ??
-            getAccessibleLabelText(fieldProps.label);
+          const visibleGroupLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
           const groupLabelText = visibleGroupLabelText ?? name;
           const ariaLabelledBy =
             radioGroupProps['aria-labelledby'] ||
@@ -142,16 +117,18 @@ export const RadioGroupField = forwardRef<HTMLDivElement, RadioGroupFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      id={labelId}
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                visibleGroupLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          id={labelId}
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}
@@ -236,6 +213,10 @@ export const RadioField = forwardRef<HTMLInputElement, RadioFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -254,15 +235,17 @@ export const RadioField = forwardRef<HTMLInputElement, RadioFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

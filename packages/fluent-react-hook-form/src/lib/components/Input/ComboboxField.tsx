@@ -13,6 +13,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type ComboboxChoiceOption = {
   label: string;
@@ -51,6 +52,10 @@ export const ComboboxField = forwardRef<HTMLInputElement, ComboboxFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const displayValue =
             (value as OptionOnly[])?.map((v) => v.label)?.join(', ') || '';
@@ -81,16 +86,18 @@ export const ComboboxField = forwardRef<HTMLInputElement, ComboboxFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                      htmlFor={comboboxId}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                          htmlFor={comboboxId}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

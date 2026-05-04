@@ -11,6 +11,7 @@ import {
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type SliderFieldProps = FieldProps &
   SliderProps &
@@ -36,6 +37,10 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const handleOnChange: SliderProps['onChange'] = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -56,15 +61,17 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

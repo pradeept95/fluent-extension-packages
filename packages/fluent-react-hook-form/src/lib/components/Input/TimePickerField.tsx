@@ -18,6 +18,7 @@ import {
   TimePickerProps,
   formatDateToTimeString,
 } from '@fluentui/react-timepicker-compat';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type TimePickerFieldProps = FieldProps &
   InfoLabelProps & {
@@ -78,16 +79,26 @@ export const TimePickerField = forwardRef<
       rules={rules}
       render={({ field, fieldState }) => {
         const { value = null, ref } = field;
+        const fieldLabelText = getVisibleFieldLabelText(
+          infoLabelProps.label,
+          fieldProps.label
+        );
 
         return (
           <Field
             {...fieldProps}
             label={
-              {
-                children: (_: unknown, props: LabelProps) => (
-                  <InfoLabel weight="semibold" {...props} {...infoLabelProps} />
-                ),
-              } as unknown as InfoLabelProps
+              fieldLabelText
+                ? ({
+                    children: (_: unknown, props: LabelProps) => (
+                      <InfoLabel
+                        weight="semibold"
+                        {...props}
+                        {...infoLabelProps}
+                      />
+                    ),
+                  } as unknown as InfoLabelProps)
+                : undefined
             }
             validationState={fieldState.invalid ? 'error' : undefined}
             validationMessage={fieldState.error?.message}
@@ -191,15 +202,25 @@ export const DateTimePickerField = forwardRef<
       rules={rules}
       render={({ field, fieldState }) => {
         const { value, ref } = field;
+        const fieldLabelText = getVisibleFieldLabelText(
+          infoLabelProps.label,
+          fieldProps.label
+        );
         return (
           <Field
             {...fieldProps}
             label={
-              {
-                children: (_: unknown, props: LabelProps) => (
-                  <InfoLabel weight="semibold" {...props} {...infoLabelProps} />
-                ),
-              } as unknown as InfoLabelProps
+              fieldLabelText
+                ? ({
+                    children: (_: unknown, props: LabelProps) => (
+                      <InfoLabel
+                        weight="semibold"
+                        {...props}
+                        {...infoLabelProps}
+                      />
+                    ),
+                  } as unknown as InfoLabelProps)
+                : undefined
             }
             validationState={fieldState.invalid ? 'error' : undefined}
             validationMessage={fieldState.error?.message}

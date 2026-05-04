@@ -10,6 +10,7 @@ import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { Calendar } from '@fluentui/react-calendar-compat';
 import type { CalendarProps } from '@fluentui/react-calendar-compat';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export {
   DateRangeType,
@@ -43,6 +44,10 @@ export const CalendarField = forwardRef<HTMLInputElement, CalendarFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const handleOnChange: CalendarProps['onSelectDate'] = (
             date: Date | null,
@@ -69,15 +74,17 @@ export const CalendarField = forwardRef<HTMLInputElement, CalendarFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

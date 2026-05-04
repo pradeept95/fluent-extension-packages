@@ -31,6 +31,7 @@ import {
 import { FileInfo } from '@prt-ts/types';
 import { FilePicker, FilePickerProps } from '@prt-ts/fluent-input-extensions';
 import { For, Show } from '@prt-ts/react-control-flow';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type FileInputFieldProps = FieldProps &
   InfoLabelProps &
@@ -74,6 +75,10 @@ export const FileInputField = forwardRef<HTMLInputElement, FileInputFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, value = [], ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const validationMessage = fieldState.error?.message;
           const validationState =
@@ -86,15 +91,17 @@ export const FileInputField = forwardRef<HTMLInputElement, FileInputFieldProps>(
               <Field
                 {...fieldProps}
                 label={
-                  {
-                    children: (_: unknown, props: LabelProps) => (
-                      <InfoLabel
-                        weight="semibold"
-                        {...props}
-                        {...infoLabelProps}
-                      />
-                    ),
-                  } as unknown as InfoLabelProps
+                  fieldLabelText
+                    ? ({
+                        children: (_: unknown, props: LabelProps) => (
+                          <InfoLabel
+                            weight="semibold"
+                            {...props}
+                            {...infoLabelProps}
+                          />
+                        ),
+                      } as unknown as InfoLabelProps)
+                    : undefined
                 }
                 validationState={validationState}
                 validationMessage={validationMessage}

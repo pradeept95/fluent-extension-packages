@@ -12,39 +12,13 @@ import {
   tokens,
   useArrowNavigationGroup,
 } from '@fluentui/react-components';
-import { ReactNode, forwardRef, isValidElement } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
-
-const getAccessibleLabelText = (label: unknown): string | undefined => {
-  if (typeof label === 'string') {
-    const trimmedLabel = label.trim();
-    return trimmedLabel.length > 0 ? trimmedLabel : undefined;
-  }
-
-  if (typeof label === 'number') {
-    return `${label}`;
-  }
-
-  if (Array.isArray(label)) {
-    const mergedLabel = label
-      .map((item) => getAccessibleLabelText(item))
-      .filter((item): item is string => !!item)
-      .join(' ')
-      .trim();
-    return mergedLabel.length > 0 ? mergedLabel : undefined;
-  }
-
-  if (isValidElement<{ children?: unknown }>(label)) {
-    return getAccessibleLabelText(label.props.children);
-  }
-
-  if (label && typeof label === 'object' && 'children' in label) {
-    return getAccessibleLabelText((label as { children?: unknown }).children);
-  }
-
-  return undefined;
-};
+import {
+  getAccessibleLabelText,
+  getVisibleFieldLabelText,
+} from './accessibility';
 
 export type CheckboxFieldProps = FieldProps &
   CheckboxProps &
@@ -72,9 +46,10 @@ export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
-          const fieldLabelText =
-            getAccessibleLabelText(infoLabelProps.label) ??
-            getAccessibleLabelText(fieldProps.label);
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
           const checkboxLabel =
             checkboxProps.label ??
             (value ? rest.checkedLabel : rest.uncheckedLabel) ??
@@ -97,15 +72,17 @@ export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}
@@ -232,10 +209,11 @@ export const CheckboxGroupField = forwardRef<
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
-          const groupLabelText =
-            getAccessibleLabelText(infoLabelProps.label) ??
-            getAccessibleLabelText(fieldProps.label) ??
-            name;
+          const visibleGroupLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
+          const groupLabelText = visibleGroupLabelText ?? name;
           const selectedValues = (value || [])?.map(
             (v: CheckboxChoiceOption) => v.value
           );
@@ -263,15 +241,17 @@ export const CheckboxGroupField = forwardRef<
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                visibleGroupLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

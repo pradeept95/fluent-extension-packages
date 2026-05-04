@@ -15,6 +15,7 @@ import {
   PeopleInputRef,
 } from '@prt-ts/fluent-input-extensions';
 import { useFormContext } from '../Form';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type PeoplePickerProps = Omit<PeopleInputProps, 'value'> &
   InfoLabelProps &
@@ -55,27 +56,33 @@ export const PeoplePickerField = React.forwardRef<
       rules={rules}
       render={({ field, fieldState }) => {
         const { value, onChange, onBlur, ref: fieldRef } = field;
+        const fieldLabelText = getVisibleFieldLabelText(
+          label,
+          fieldsProps.label
+        );
         return (
           <Field
             {...fieldsProps}
             label={
-              {
-                children: (_: unknown, props: LabelProps) => (
-                  <InfoLabel
-                    weight="semibold"
-                    {...infoLabelProps}
-                    {...props}
-                    htmlFor={inputId}
-                    style={{
-                      marginBottom: tokens.spacingVerticalXXS,
-                      paddingBottom: tokens.spacingVerticalXXS,
-                      paddingTop: tokens.spacingVerticalXXS,
-                    }}
-                  >
-                    {label as unknown as string}
-                  </InfoLabel>
-                ),
-              } as LabelProps
+              fieldLabelText
+                ? ({
+                    children: (_: unknown, props: LabelProps) => (
+                      <InfoLabel
+                        weight="semibold"
+                        {...infoLabelProps}
+                        {...props}
+                        htmlFor={inputId}
+                        style={{
+                          marginBottom: tokens.spacingVerticalXXS,
+                          paddingBottom: tokens.spacingVerticalXXS,
+                          paddingTop: tokens.spacingVerticalXXS,
+                        }}
+                      >
+                        {fieldLabelText}
+                      </InfoLabel>
+                    ),
+                  } as LabelProps)
+                : undefined
             }
             validationState={fieldState.invalid ? 'error' : undefined}
             validationMessage={fieldState.error?.message}

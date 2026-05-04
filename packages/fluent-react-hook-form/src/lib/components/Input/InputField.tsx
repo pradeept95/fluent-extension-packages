@@ -15,6 +15,7 @@ import { Controller, ControllerProps } from 'react-hook-form';
 import { mask } from '../../utils/InputFormatter';
 import { CommonFieldInfoLabelProps } from '../types/CommonFieldProps';
 import { Show } from '@prt-ts/react-control-flow';
+import { getVisibleFieldLabelText } from './accessibility';
 
 type AdditionalInputProps = {
   name: string;
@@ -103,7 +104,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         control={control}
         rules={rules}
         render={({ field, fieldState }) => {
-          const { onChange, onBlur, value = "", ref } = field;
+          const { onChange, onBlur, value = '', ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const handleOnChange = (
             ev: React.ChangeEvent<HTMLInputElement>,
@@ -139,16 +144,18 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                      htmlFor={fieldId}
-                    />
-                  ),
-                } as LabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                          htmlFor={fieldId}
+                        />
+                      ),
+                    } as LabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

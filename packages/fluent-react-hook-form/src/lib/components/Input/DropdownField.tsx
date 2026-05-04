@@ -18,6 +18,7 @@ import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { Show } from '@prt-ts/react-control-flow';
 import { ChoiceOption } from '@prt-ts/types';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type DropdownChoiceOption = {
   optionProps?: Partial<OptionProps> | undefined;
@@ -110,6 +111,10 @@ export const DropdownField = forwardRef<HTMLButtonElement, DropdownFieldProps>(
         rules={rules}
         render={({ field, fieldState }) => {
           const { onChange, onBlur, value, ref } = field;
+          const fieldLabelText = getVisibleFieldLabelText(
+            infoLabelProps.label,
+            fieldProps.label
+          );
 
           const displayValue =
             (value as OptionOnly[])?.map((v) => v.label)?.join(', ') || '';
@@ -144,16 +149,18 @@ export const DropdownField = forwardRef<HTMLButtonElement, DropdownFieldProps>(
             <Field
               {...fieldProps}
               label={
-                {
-                  children: (_: unknown, props: LabelProps) => (
-                    <InfoLabel
-                      weight="semibold"
-                      {...props}
-                      {...infoLabelProps}
-                      htmlFor={dropdownId}
-                    />
-                  ),
-                } as unknown as InfoLabelProps
+                fieldLabelText
+                  ? ({
+                      children: (_: unknown, props: LabelProps) => (
+                        <InfoLabel
+                          weight="semibold"
+                          {...props}
+                          {...infoLabelProps}
+                          htmlFor={dropdownId}
+                        />
+                      ),
+                    } as unknown as InfoLabelProps)
+                  : undefined
               }
               validationState={fieldState.invalid ? 'error' : undefined}
               validationMessage={fieldState.error?.message}

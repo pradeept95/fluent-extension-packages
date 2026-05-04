@@ -9,6 +9,7 @@ import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
 import { Controller, ControllerProps } from 'react-hook-form';
 import { DatePicker, DatePickerProps } from '@fluentui/react-datepicker-compat';
+import { getVisibleFieldLabelText } from './accessibility';
 
 export type DatePickerFieldProps = FieldProps &
   InfoLabelProps &
@@ -33,6 +34,10 @@ export const DatePickerField = forwardRef<
       rules={rules}
       render={({ field, fieldState }) => {
         const { onChange, onBlur, value, ref } = field;
+        const fieldLabelText = getVisibleFieldLabelText(
+          infoLabelProps.label,
+          fieldProps.label
+        );
 
         const handleOnChange: DatePickerProps['onSelectDate'] = (
           date: Date | null | undefined
@@ -50,11 +55,17 @@ export const DatePickerField = forwardRef<
           <Field
             {...fieldProps}
             label={
-              {
-                children: (_: unknown, props: LabelProps) => (
-                  <InfoLabel weight="semibold" {...props} {...infoLabelProps} />
-                ),
-              } as unknown as InfoLabelProps
+              fieldLabelText
+                ? ({
+                    children: (_: unknown, props: LabelProps) => (
+                      <InfoLabel
+                        weight="semibold"
+                        {...props}
+                        {...infoLabelProps}
+                      />
+                    ),
+                  } as unknown as InfoLabelProps)
+                : undefined
             }
             validationState={fieldState.invalid ? 'error' : undefined}
             validationMessage={fieldState.error?.message}
