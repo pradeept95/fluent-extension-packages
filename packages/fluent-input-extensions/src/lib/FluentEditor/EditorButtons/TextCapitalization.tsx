@@ -19,6 +19,7 @@ export const TextCapitalization: React.FC<TextCapitalizationProps> = ({ editor, 
                 <Tooltip content={<>Text Capitalization</>} relationship='label'>
                     <Button
                         appearance="subtle"
+                        aria-label="Text capitalization"
                         icon={{
                             children: (
                                 <TextEditStyleFilled className={styles.icon} />
@@ -38,7 +39,9 @@ export const TextCapitalization: React.FC<TextCapitalizationProps> = ({ editor, 
                             changeCapitalization(editor, "sentence", "en-US");
                             handleChange?.();
                         }}
-                    />
+                    >
+                        Capitalize sentence
+                    </MenuItem>
                     </Tooltip>
                     <Tooltip content={<>All uppercase</>} relationship='label'>
                     <MenuItem
@@ -48,7 +51,9 @@ export const TextCapitalization: React.FC<TextCapitalizationProps> = ({ editor, 
                             changeCapitalization(editor, "upperCase", "en-US");
                             handleChange?.();
                         }}
-                    />
+                    >
+                        Uppercase
+                    </MenuItem>
                     </Tooltip>
                     <Tooltip content={<>All lowercase</>} relationship='label'>
                     <MenuItem
@@ -58,7 +63,9 @@ export const TextCapitalization: React.FC<TextCapitalizationProps> = ({ editor, 
                             changeCapitalization(editor, "lowerCase", "en-US");
                             handleChange?.();
                         }}
-                    />
+                    >
+                        Lowercase
+                    </MenuItem>
                     </Tooltip>
                     <Tooltip content={<>Capitalize all words</>} relationship='label'>
                     <MenuItem
@@ -68,7 +75,9 @@ export const TextCapitalization: React.FC<TextCapitalizationProps> = ({ editor, 
                             changeCapitalization(editor, "capitalize", "en-US");
                             handleChange?.();
                         }}
-                    />
+                    >
+                        Capitalize Words
+                    </MenuItem>
                     </Tooltip>
                 </MenuList>
             </MenuPopover>

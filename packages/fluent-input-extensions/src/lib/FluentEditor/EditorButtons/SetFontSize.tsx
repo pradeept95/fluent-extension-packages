@@ -32,6 +32,7 @@ export const SetFontSizeFormatter: React.FC<HeadingLevelProps> = ({ editor, font
                 size="small"
                 appearance="filled-lighter"
                 className={styles.dropdown}
+                aria-label="Font size"
                 value={selectedValue}
                 selectedOptions={selectedFontSize}
                 onOptionSelect={(_, data) => {
@@ -50,6 +51,10 @@ export const SetFontSizeFormatter: React.FC<HeadingLevelProps> = ({ editor, font
                 }}
                 button={{
                     className : styles.buttonContent,
+                    'aria-label': 'Font size',
+                }}
+                clearButton={{
+                    'aria-label': 'Clear font size',
                 }}
                 aria-invalid={false}
             >

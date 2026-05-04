@@ -140,7 +140,7 @@ export const FluentEditorRibbon: React.FC<FluentEditorRibbonProps> = (props) => 
                 </Tooltip>
                 <Tooltip content={<>Toggle Strike Through</>} relationship='label'>
                     <ToggleButton
-                        aria-label="strikeThrough"
+                        aria-label="Strikethrough"
                         appearance="subtle"
                         icon={<TextStrikethroughRegular className={styles.icon} />}
                         checked={isStrikeThrough}
@@ -174,7 +174,7 @@ export const FluentEditorRibbon: React.FC<FluentEditorRibbonProps> = (props) => 
 
                 <Tooltip content={<>Increase Indent</>} relationship='label'>
                     <ToggleButton
-                        aria-label="Indent"
+                        aria-label="Increase indentation"
                         appearance="subtle"
                         icon={<TextGrammarArrowLeftFilled className={styles.icon} />}
                         onClick={() => {
@@ -309,7 +309,7 @@ export const FluentEditorRibbon: React.FC<FluentEditorRibbonProps> = (props) => 
                 
                 <Tooltip content={<>Undo</>} relationship='label'>
                     <Button
-                        aria-label="Bold"
+                        aria-label="Undo"
                         appearance="subtle"
                         icon={<ArrowUndoRegular className={styles.icon} />}
                         disabled={!canUndo}
@@ -321,7 +321,7 @@ export const FluentEditorRibbon: React.FC<FluentEditorRibbonProps> = (props) => 
                 </Tooltip>
                 <Tooltip content={<>Redo</>} relationship='label'>
                     <Button
-                        aria-label="Italic"
+                        aria-label="Redo"
                         appearance="subtle"
                         icon={<ArrowRedoRegular className={styles.icon} />}
                         disabled={!canRedo}

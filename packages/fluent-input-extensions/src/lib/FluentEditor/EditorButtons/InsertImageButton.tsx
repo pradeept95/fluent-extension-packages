@@ -1,4 +1,4 @@
-import { Popover, Button, PopoverSurface, Input, tokens, MenuButtonProps, SplitButton, PositioningImperativeRef, Menu, MenuTrigger, MenuPopover, MenuList, MenuItem } from '@fluentui/react-components';
+import { Popover, Button, PopoverSurface, Input, tokens, MenuButtonProps, SplitButton, PositioningImperativeRef, Menu, MenuTrigger, MenuPopover, MenuList, MenuItem, Tooltip } from '@fluentui/react-components';
 import { ImageRegular } from '@fluentui/react-icons';
 import React from 'react';
 import { insertImage, setImageBorder } from 'roosterjs-content-model-api';
@@ -52,20 +52,27 @@ export const InsertImageButton: React.FC<InsertImageButtonProps> = ({ editor, ha
             <Menu positioning="below-end">
                 <MenuTrigger disableButtonEnhancement>
                     {(triggerProps: MenuButtonProps) => (
-                        <SplitButton
-                        appearance="subtle"
-                            menuButton={triggerProps}
-                            primaryActionButton={{
-                                icon: <ImageRegular className={styles.icon} />,
-                                size: 'small',
-                                onClick: () => {
-                                    if (fileInputRef.current) {
-                                        fileInputRef.current.click();
-                                    }
-                                },
-                                ref: popoverTriggerButtonRef
-                            }}
-                        />
+                        <Tooltip content={<>Image actions</>} relationship='label'>
+                            <SplitButton
+                                appearance="subtle"
+                                aria-label="Image actions"
+                                menuButton={{
+                                    ...triggerProps,
+                                    'aria-label': 'Open image actions menu',
+                                }}
+                                primaryActionButton={{
+                                    icon: <ImageRegular className={styles.icon} />,
+                                    'aria-label': 'Upload image from device',
+                                    size: 'small',
+                                    onClick: () => {
+                                        if (fileInputRef.current) {
+                                            fileInputRef.current.click();
+                                        }
+                                    },
+                                    ref: popoverTriggerButtonRef
+                                }}
+                            />
+                        </Tooltip>
                     )}
                 </MenuTrigger>
 
@@ -103,9 +110,15 @@ export const InsertImageButton: React.FC<InsertImageButtonProps> = ({ editor, ha
 
                 <PopoverSurface>
                     <div style={{ display: "flex", flexDirection: "column", gap: tokens.spacingHorizontalS }}>
-                        <Input ref={imageUrlRef} type="text" placeholder="Image URL" />
+                        <Input
+                            ref={imageUrlRef}
+                            type="text"
+                            placeholder="Image URL"
+                            aria-label="Image URL"
+                        />
                         <Button
                             size='small'
+                            aria-label="Load image from web"
                             onClick={() => {
                                 const imageUrl = imageUrlRef.current?.value;
                                 if (imageUrl) {

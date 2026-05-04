@@ -1,4 +1,4 @@
-import { Popover, Button, PopoverSurface, Input, tokens, Checkbox, useId, PositioningImperativeRef, SplitButton, MenuPopover, Menu, MenuTrigger, MenuButtonProps, MenuList, MenuItem } from '@fluentui/react-components';
+import { Popover, Button, PopoverSurface, Input, tokens, Checkbox, useId, PositioningImperativeRef, SplitButton, MenuPopover, Menu, MenuTrigger, MenuButtonProps, MenuList, MenuItem, Tooltip } from '@fluentui/react-components';
 import { LinkDismissRegular, LinkRegular } from '@fluentui/react-icons';
 import React from 'react';
 import { useIconStyles } from './useIconStyles';
@@ -45,9 +45,9 @@ export const InsertLinkButton: React.FC<InsertLinkButtonProps> = ({ editor, canU
             >
                 <PopoverSurface>
                     <div style={{ display: "flex", flexDirection: "column", gap: tokens.spacingHorizontalS }}>
-                        <Input size={"small"} type={"url"} placeholder='Link' ref={linkRef} />
-                        <Input size={"small"} placeholder='Alt text' ref={altTextRef} />
-                        <Input size={"small"} placeholder='Display Title' ref={titleRef} />
+                        <Input size={"small"} type={"url"} placeholder='Link' aria-label="Link URL" ref={linkRef} />
+                        <Input size={"small"} placeholder='Alt text' aria-label="Link alt text" ref={altTextRef} />
+                        <Input size={"small"} placeholder='Display Title' aria-label="Link display title" ref={titleRef} />
                         <Checkbox id={id} defaultChecked={true} ref={inNewWindowRef} label={<>Open in new tab</>} />
                         <Button
                             appearance="subtle"
@@ -79,16 +79,23 @@ export const InsertLinkButton: React.FC<InsertLinkButtonProps> = ({ editor, canU
             <Menu positioning="above">
                 <MenuTrigger disableButtonEnhancement>
                     {(triggerProps: MenuButtonProps) => (
-                        <SplitButton
-                        appearance="subtle"
-                            menuButton={triggerProps}
-                            primaryActionButton={{
-                                ref: popoverTriggerButtonRef,
-                                icon: <LinkRegular className={styles.icon} />,
-                                size: 'small',
-                                onClick: () => setIsLinkEditorOpen(true)
-                            }}
-                        />
+                        <Tooltip content={<>Link actions</>} relationship='label'>
+                            <SplitButton
+                                appearance="subtle"
+                                aria-label="Link actions"
+                                menuButton={{
+                                    ...triggerProps,
+                                    'aria-label': 'Open link actions menu',
+                                }}
+                                primaryActionButton={{
+                                    ref: popoverTriggerButtonRef,
+                                    icon: <LinkRegular className={styles.icon} />,
+                                    'aria-label': 'Insert or edit link',
+                                    size: 'small',
+                                    onClick: () => setIsLinkEditorOpen(true)
+                                }}
+                            />
+                        </Tooltip>
                     )}
                 </MenuTrigger>
 

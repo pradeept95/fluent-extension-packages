@@ -64,7 +64,7 @@ export const InsertTableButton: React.FC<InsertTableButtonProps> = ({ editor, ha
                 <Tooltip content={<>Insert Table</>} relationship='label'>
                     <Button
                         appearance="subtle"
-                        aria-label="Code Block"
+                        aria-label="Insert table"
                         icon={<TableRegular className={styles.icon} />}
                         name="additionalFormat"
                         value={"code"}
@@ -87,6 +87,7 @@ export const InsertTableButton: React.FC<InsertTableButtonProps> = ({ editor, ha
                                             (colsNum) => (
                                                 <Button
                                                     key={`cols_${colsNum}`}
+                                                    aria-label={`Select ${rowsNum} rows and ${colsNum} columns`}
                                                     onClick={() => {
                                                         handleCreateTable(rows, cols);
                                                     }}

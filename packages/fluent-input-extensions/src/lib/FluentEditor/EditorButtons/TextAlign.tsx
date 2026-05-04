@@ -46,6 +46,7 @@ export const TextAlign: React.FC<TextAlignProps> = ({ editor, handleChange, text
                     }}
                         size="small"
                         appearance="subtle"
+                        aria-label="Text alignment"
                     />
                 </Tooltip>
             </MenuTrigger>
@@ -57,28 +58,39 @@ export const TextAlign: React.FC<TextAlignProps> = ({ editor, handleChange, text
                             icon={<TextAlignJustifyRegular className={styles.icon} />}
                             name={"alignment"}
                             value={"justify"}
-                        />
+                        >
+                            Justify
+                        </MenuItemRadio>
                     </Tooltip>
                     <Tooltip content={<>Align Left</>} relationship='label'>
                         <MenuItemRadio
+                            aria-label="Align Left"
                             icon={<TextAlignLeftRegular className={styles.icon} />}
                             name={"alignment"}
                             value={"left"}
-                        />
+                        >
+                            Left
+                        </MenuItemRadio>
                     </Tooltip>
                     <Tooltip content={<>Align Center</>} relationship='label'>
                         <MenuItemRadio
+                            aria-label="Align Center"
                             icon={<TextAlignCenterRegular className={styles.icon} />}
                             name={"alignment"}
                             value={"center"}
-                        />
+                        >
+                            Center
+                        </MenuItemRadio>
                     </Tooltip>
                     <Tooltip content={<>Align Right</>} relationship='label'>
                         <MenuItemRadio
+                            aria-label="Align Right"
                             icon={<TextAlignRightRegular className={styles.icon} />}
                             name={"alignment"}
                             value={"right"}
-                        />
+                        >
+                            Right
+                        </MenuItemRadio>
                     </Tooltip>
                 </MenuList>
             </MenuPopover>

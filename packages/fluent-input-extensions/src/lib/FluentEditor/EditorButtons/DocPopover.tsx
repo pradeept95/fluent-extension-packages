@@ -8,7 +8,12 @@ export const DocPopover: React.FC = () => {
         <Popover withArrow>
             <PopoverTrigger disableButtonEnhancement>
                 <Tooltip content="Keyboard Shortcuts" relationship='label'>
-                    <Button icon={<InfoRegular />} appearance='subtle' size='small'/>
+                    <Button
+                        aria-label="Keyboard shortcuts"
+                        icon={<InfoRegular />}
+                        appearance='subtle'
+                        size='small'
+                    />
                 </Tooltip>
             </PopoverTrigger>
 
