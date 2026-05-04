@@ -7,6 +7,8 @@ import {
   LabelProps,
   InfoLabel,
   InfoLabelProps,
+  makeStyles,
+  mergeClasses,
 } from '@fluentui/react-components';
 import { forwardRef } from 'react';
 import { useFormContext } from '../Form';
@@ -26,6 +28,15 @@ export type SwitchFieldProps = FieldProps &
     uncheckedLabel?: string;
   };
 
+const useSwitchFieldStyles = makeStyles({
+  root: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+});
+
 export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
   ({ name, rules, required, ...rest }, SwitchRef) => {
     const {
@@ -35,6 +46,7 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
     const { ...fieldProps }: FieldProps = rest;
     const { ...switchProps }: SwitchProps = rest;
     const { ...infoLabelProps }: InfoLabelProps = rest;
+    const styles = useSwitchFieldStyles();
 
     return (
       <Controller
@@ -104,6 +116,7 @@ export const SwitchField = forwardRef<HTMLInputElement, SwitchFieldProps>(
                 checked={!!value}
                 label={switchLabel}
                 aria-label={switchAriaLabel}
+                className={mergeClasses(styles.root, switchProps.className)}
                 required={false}
               />
             </Field>
