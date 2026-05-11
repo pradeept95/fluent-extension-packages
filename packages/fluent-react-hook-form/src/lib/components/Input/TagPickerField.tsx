@@ -126,10 +126,11 @@ export const TagPickerField = forwardRef<TagInputRef, TagPickerFieldProps>(
             >
               <TagInput
                 {...inputProps}
+                id={inputProps.id || fieldId}
                 value={value || []}
                 onTagSelect={(tags) => {
                   onChange(tags);
-                  if(props.onTagSelect) {
+                  if (props.onTagSelect) {
                     props.onTagSelect(tags);
                   }
                 }}

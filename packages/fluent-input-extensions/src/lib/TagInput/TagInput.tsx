@@ -51,6 +51,10 @@ export const TagInput = React.forwardRef<TagInputRef, TagInputProps>(
       suggestions,
       freeform = true,
       multiselect = true,
+      id,
+      ['aria-label']: ariaLabel,
+      ['aria-labelledby']: ariaLabelledBy,
+      ['aria-describedby']: ariaDescribedBy,
       placeholder,
     } = props;
 
@@ -58,7 +62,7 @@ export const TagInput = React.forwardRef<TagInputRef, TagInputProps>(
       props;
 
     const inputProps = useTagInputImperativeHandle(value, ref, onTagSelect);
-    const fieldId = useId(`${props.name}-field`);
+    const fieldId = id || useId('tag-input-field');
 
     const [query, setQuery] = React.useState('');
 
@@ -159,6 +163,9 @@ export const TagInput = React.forwardRef<TagInputRef, TagInputProps>(
             ref={inputProps}
             onBlur={onBlur}
             placeholder={placeholder}
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledBy}
+            aria-describedby={ariaDescribedBy}
             required={false}
           />
         </TagPickerControl>
