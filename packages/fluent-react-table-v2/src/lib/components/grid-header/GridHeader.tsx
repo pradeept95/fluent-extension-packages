@@ -170,6 +170,7 @@ function DebouncedInput({
 
   return (
     <Input
+      aria-label="Search keyword"
       placeholder="Search Keyword"
       value={value as string}
       onChange={(_, data) => setValue(data.value)}
@@ -185,7 +186,7 @@ function DebouncedInput({
           <Button
             appearance="subtle"
             icon={drawerState?.isFilterDrawerOpen ? <FilterDismissFilled /> : <FilterFilled />}
-            aria-label="View Menu"
+            aria-label={drawerState?.isFilterDrawerOpen ? 'Close filter panel' : 'Open advanced filter'}
             onClick={() => { 
               dispatch?.({ type: "TOGGLE_FILTER_DRAWER" });
             }}
