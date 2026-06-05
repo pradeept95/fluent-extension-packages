@@ -1,17 +1,23 @@
-import { Button, Dropdown, Input, Option, useId } from "@fluentui/react-components";
-import { RowData, Table } from "@tanstack/react-table";
-import { usePaginationStyle } from "./usePaginationStyles";
+import {
+  Button,
+  Dropdown,
+  Input,
+  Option,
+  useId,
+} from '@fluentui/react-components';
+import { RowData, Table } from '@tanstack/react-table';
+import { usePaginationStyle } from './usePaginationStyles';
 import {
   ArrowNextFilled,
   ArrowPreviousFilled,
   NextRegular,
   PreviousRegular,
-} from "@fluentui/react-icons";
-import { useMemo } from "react";
-import { For, Show } from "@prt-ts/react-control-flow";
+} from '@fluentui/react-icons';
+import { useMemo } from 'react';
+import { For, Show } from '@prt-ts/react-control-flow';
 
 type PaginationProps<TItem extends RowData> = {
-  table: Table<TItem>
+  table: Table<TItem>;
 };
 
 const range = (from: number, to: number, step = 1): number[] =>
@@ -25,8 +31,8 @@ export const Pagination = <TItem extends RowData>(
   props: PaginationProps<TItem>
 ) => {
   const { table } = props;
-  const { pageSizeOptions } = table.options.meta || {}
-  const pageSizeSelectionId = useId("page-size-selector");
+  const { pageSizeOptions } = table.options.meta || {};
+  const pageSizeSelectionId = useId('page-size-selector');
   const styles = usePaginationStyle();
 
   const totalNumberOfPage = table.getPageCount();
@@ -36,6 +42,11 @@ export const Pagination = <TItem extends RowData>(
   // get total item count and number of item in current page
   const totalItemCount = table.getFilteredRowModel().rows.length;
   const numberOfItemsInCurrentPage = table.getRowModel().rows.length;
+  const startNumber = currentPage * pageSize + 1;
+  const endNumber = Math.min(
+    startNumber + numberOfItemsInCurrentPage - 1,
+    totalItemCount
+  );
 
   const pageSelectionOptions: number[] = useMemo(() => {
     let start = currentPage - Math.floor(DEFAULT_NUMBER_OF_PAGE_BTN / 2);
@@ -43,9 +54,10 @@ export const Pagination = <TItem extends RowData>(
 
     if (start < 1) {
       start = 1;
-      end = totalNumberOfPage > DEFAULT_NUMBER_OF_PAGE_BTN
-        ? DEFAULT_NUMBER_OF_PAGE_BTN
-        : totalNumberOfPage;
+      end =
+        totalNumberOfPage > DEFAULT_NUMBER_OF_PAGE_BTN
+          ? DEFAULT_NUMBER_OF_PAGE_BTN
+          : totalNumberOfPage;
     } else if (end > totalNumberOfPage) {
       const possibleStart = totalNumberOfPage - DEFAULT_NUMBER_OF_PAGE_BTN + 1;
       start = possibleStart < 1 ? 1 : possibleStart;
@@ -70,7 +82,8 @@ export const Pagination = <TItem extends RowData>(
               table.setPageSize(Number(+data.selectedOptions?.[0]))
             }
             className={styles.pageSelectionDropdown}
-            aria-label={"Select Page Size"}
+            aria-label={'Select Page Size'}
+            style={{ minWidth: 80 }}
           >
             <Show when={pageSelectionOptions?.length > 0}>
               <For each={pageSizeOptions}>
@@ -84,22 +97,23 @@ export const Pagination = <TItem extends RowData>(
           </Dropdown>
           <Show when={pageSelectionOptions?.length > 0 && totalItemCount > 0}>
             <span className={styles.pageSizeText}>
-              Showing {numberOfItemsInCurrentPage} of {totalItemCount} items
+              Showing {startNumber} through {endNumber} of {totalItemCount}{' '}
+              items
             </span>
           </Show>
         </div>
         <div className={styles.pageBtnContainer}>
           <div>
             <span>
-              Page{" "}
+              Page{' '}
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getState().pagination.pageIndex + 1} of{' '}
                 {table.getPageCount()}
               </strong>
             </span>
             <span>
-              {" "}
-              | Go to page:{" "}
+              {' '}
+              | Go to page:{' '}
               <Input
                 type="number"
                 size="small"
@@ -112,8 +126,8 @@ export const Pagination = <TItem extends RowData>(
                 }}
                 className={styles.pageSizeInput}
                 aria-label="Page Number"
-                autoComplete={"off"}
-                autoCorrect={"off"}
+                autoComplete={'off'}
+                autoCorrect={'off'}
               />
             </span>
           </div>
@@ -140,7 +154,7 @@ export const Pagination = <TItem extends RowData>(
               <Button
                 shape="circular"
                 key={index}
-                appearance={option - 1 === currentPage ? "primary" : undefined}
+                appearance={option - 1 === currentPage ? 'primary' : undefined}
                 onClick={() => table.setPageIndex(option - 1)}
                 aria-label={`Show Page ${option}`}
                 size="small"
